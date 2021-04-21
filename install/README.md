@@ -173,15 +173,14 @@ I called "Smart_Home_Virtual_Buttons"; consistency is nice!)
 
 * Now take note the ARN.  This is what we need to plug into the Alexa Skill
 * Click on the "Upload from" and upload the `lambda.zip` file.
-* In the "Runtime settings" click on "edit" and then change the "Handle" value to "main".<br>
-This is the name of the program inside the zip file we just uploaded.
-* Save that
+  * In the "Runtime settings" click on "edit" and then change the "Handle" value to "main".<br>This is the name of the program inside the zip file we just uploaded.
+  * Save that
 
 * Click on the "Configuration" tab
-* Click on "EDIT" for the "General configuration"
-* Set Memory to 128 (the smallest it allows)
-* Set Timeout to 3 seconds
-* Save that
+  * Click on "EDIT" for the "General configuration"
+  * Set Memory to 128 (the smallest it allows)
+  * Set Timeout to 3 seconds
+  * Save that
 
 ### Add a API Gateway trigger
 
