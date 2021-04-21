@@ -1,0 +1,17 @@
+Login with Amazon Client ID: 
+
+Login with Amazon Client Secret: 
+
+Alexa Skill ID: 
+
+Alexa Client ID: 
+
+Alexa Client Secret: 
+
+Redirect URLs: https://layla.amazon.com/api/skill/link/
+               https://pitangui.amazon.com/api/skill/link/
+               https://alexa.amazon.co.jp/api/skill/link/
+
+AWS Lambda ARN: 
+
+API Endpoint URL: 
