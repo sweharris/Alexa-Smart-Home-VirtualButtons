@@ -17,6 +17,19 @@ The Cloud account may not be created straight away; be patient.  There's a
 lot more you can do once you've got your account (e.g. create an "IAM"
 user and use that to login) but this isn't an Amazon tutorial.
 
+[Amazon](https://developer.amazon.com/en-US/docs/alexa/smarthome/steps-to-build-a-smart-home-skill.html) document the high levels, which is what I based
+a lot of these instructions on.
+
+Now there some question in my mind as to what _region_ a skill should be
+deployed in.  The [Amazon documentation](https://developer.amazon.com/en-US/docs/alexa/smarthome/develop-smart-home-skills-in-multiple-languages.html#deploy)
+says that it depends on the language you support.  However this skill
+doesn't do voice interaction so I'm not sure it matters.  I deployed
+to us-east-1 (North Virginia). 
+
+This will impact the deployment of DynamoDB and the Lamba skill, and
+maybe also the API Gateway.  When you get to the "AWS Console" part of
+the instructions, le you can select your region from the top bar menu,
+on the right.
 
 ## Installation
 
@@ -161,6 +174,7 @@ as well clean up.
 ### Create the Lambda function.
 
 Finally!
+
 
 * From the Services menu select Lambda
 * Create function.
