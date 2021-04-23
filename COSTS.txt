@@ -11,8 +11,8 @@ Services used (as far as I can tell)
           value applies.  Calls are made whenever a status is queried (eg
           if you open the Alexa app and look at the device state), or if
           you ask Alexa for info ("is the door open"), or if you do a disovery.
-          Note: Leaving the app open on a device page could generate 3
-          calls/sec as it tries to keep the current state refreshed.
+          Note: Leaving the app open on a device page could generate a call
+          every 3 secs as it tries to keep the current state refreshed.
 
           In building this skill, 385 requests in a week, 7.364 seconds of
           compute
