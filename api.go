@@ -8,9 +8,9 @@ import (
 )
 
 type MyRequest struct {
-	Command  string `json:"command"`
-	Param1   string `json:"param1"`
-	Param2   string `json:"param2"`
+	Command string `json:"command"`
+	Param1  string `json:"param1"`
+	Param2  string `json:"param2"`
 }
 
 type MyResponse struct {
