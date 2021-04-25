@@ -172,9 +172,7 @@ func state_response(correl string, id string) string {
 func push_update(id, state int) string {
 	log.Println("Pushing a notification to Alexa")
 
-	refresh_token()
-
-	tokenStruct := get_button_name(DB_TOKEN_AUTH)
+	tokenStruct := refresh_token()
 	token := AuthResponse{}
 	json.Unmarshal([]byte(tokenStruct), &token)
 

@@ -27,7 +27,8 @@ func start_user_auth(data []byte) string {
 	code := message.Directive.Payload.Grant.Code
 
 	// If we failed to get the token
-	if !do_user_auth("authorization_code", "code", code) {
+	_, ok := do_user_auth("authorization_code", "code", code)
+	if !ok {
 		response.Event.Header.Name = "ErrorResponse"
 		response.Event.Payload.Type = "ACCEPT_GRANT_FAILED"
 		response.Event.Payload.Message = "We failed to get a token"
@@ -43,10 +44,10 @@ func start_user_auth(data []byte) string {
 
 // Call this before any use of the user's authn token; we'll refresh
 // if needed
-func refresh_token() {
+func refresh_token() string {
 	data := get_button_by_id(DB_TOKEN_AUTH)
 	if data.Name == "" {
-		return
+		return ""
 	}
 
 	token := AuthResponse{}
@@ -56,15 +57,19 @@ func refresh_token() {
 	// (60 seconds leeway)
 	if token.TimeSet+token.ExpiresIn > time.Now().Unix()-60 {
 		log.Println("No refresh needed")
-		return
+		return data.Name
 	}
 
 	log.Println("Refreshing auth token")
-	do_user_auth("refresh_token", "refresh_token", token.RefreshToken)
-	return
+	newtoken, ok := do_user_auth("refresh_token", "refresh_token", token.RefreshToken)
+	if !ok {
+		return data.Name
+	} else {
+		return newtoken
+	}
 }
 
-func do_user_auth(grant_type, typestr, value string) bool {
+func do_user_auth(grant_type, typestr, value string) (string, bool) {
 
 	// We need to convert this into a token.  We need some information
 	// from DynamoDB (client ID/secret)
@@ -73,7 +78,7 @@ func do_user_auth(grant_type, typestr, value string) bool {
 
 	if client_id == "" || client_secret == "" {
 		log.Println("Ensure you have setclientid and setclientsecret before enabling skill")
-		return false
+		return "", false
 	}
 
 	log.Println("Attempting to get tokens for code: " + value)
@@ -88,11 +93,11 @@ func do_user_auth(grant_type, typestr, value string) bool {
 
 	if err != nil {
 		log.Println("Error getting code: " + err.Error())
-		return false
+		return "", false
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return false
+		return "", false
 	}
 
 	log.Println(resp.StatusCode)
@@ -106,11 +111,11 @@ func do_user_auth(grant_type, typestr, value string) bool {
 	json.Unmarshal(body, &token)
 	if token.AccessToken == "" {
 		log.Println("Did not parse response")
-		return false
+		return "", false
 	}
 	token.TimeSet = time.Now().Unix()
 
 	result, _ := json.Marshal(token)
 	set_button_name(DB_TOKEN_AUTH, string(result))
-	return true
+	return string(result), true
 }

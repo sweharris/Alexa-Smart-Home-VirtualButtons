@@ -106,8 +106,7 @@ func command_mode(cmd string, args []string) string {
 		set_button_name(DB_TOKEN_AUTH, args[0])
 		return get_button_name(DB_TOKEN_AUTH)
 	case "refreshtoken":
-		refresh_token()
-		return get_button_name(DB_TOKEN_AUTH)
+		return refresh_token()
 	case "discovery":
 		return discovery_response()
 	case "statereport":
