@@ -9,6 +9,7 @@ package main
 // Alexa limits you to maybe 100 (or 300?) buttons
 
 import (
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -59,6 +60,10 @@ func get_buttons(all bool) []Button {
 	for c := 0; c < len(result.Items); c++ {
 		b := Button{}
 		dynamodbattribute.UnmarshalMap(result.Items[c], &b)
+		// If the button has no name then set a default one
+		if b.Name == "" {
+			b.Name=fmt.Sprintf("switch-%06d", b.ButtonID)
+		}
 		if all || b.ButtonID <= DB_MAX_VAL {
 			buttons = append(buttons, b)
 		}
