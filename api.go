@@ -28,8 +28,6 @@ func api_wrapper(data []byte) string {
 }
 
 func handle_api(data []byte) string {
-	log.Println(string(data))
-
 	// Parse the incoming message
 	message := events.APIGatewayProxyRequest{}
 	err := json.Unmarshal(data, &message)

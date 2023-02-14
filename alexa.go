@@ -242,8 +242,6 @@ func handle_alexa(data []byte) string {
 	message := AlexaMessage{}
 	err := json.Unmarshal(data, &message)
 
-	log.Println(string(data))
-
 	if err != nil {
 		log.Println("Bad parse: " + err.Error())
 		return "Bad JSON: " + err.Error()
