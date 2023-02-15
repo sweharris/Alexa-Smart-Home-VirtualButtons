@@ -34,7 +34,7 @@ func process_lambda(data []byte) []byte {
 	} else if req["directive"] != nil {
 		log.Println("Alexa call")
 		result = handle_alexa(data)
-	} else if req["routeKey"] != nil {
+	} else if req["routeKey"] != nil || req["httpMethod"] != nil {
 		log.Println("API call")
 		result = api_wrapper(data)
 	}
