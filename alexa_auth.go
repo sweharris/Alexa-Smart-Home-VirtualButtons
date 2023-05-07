@@ -54,8 +54,8 @@ func refresh_token() string {
 	json.Unmarshal([]byte(data.Name), &token)
 
 	// If we're within the life then we don't need to refresh
-	// (60 seconds leeway)
-	if token.TimeSet+token.ExpiresIn > time.Now().Unix()-60 {
+	// (300 seconds leeway)
+	if token.TimeSet+token.ExpiresIn > time.Now().Unix()-300 {
 		log.Println("No refresh needed")
 		return data.Name
 	}
