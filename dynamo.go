@@ -142,7 +142,7 @@ func set_button_state(id int, state int) string {
 	}
 
 	// Push an immediate update to Alexa
-	push_update(id, state)
+	push_update(id, state, false)
 
 	// Update DynamoDB
 	sess := session.Must(session.NewSessionWithOptions(session.Options{

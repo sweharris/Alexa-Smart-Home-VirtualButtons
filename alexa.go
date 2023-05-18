@@ -169,10 +169,10 @@ func state_response(correl string, id string) string {
 
 // Push an update message.
 
-func push_update(id, state int) string {
+func push_update(id, state int, force_refresh bool) string {
 	log.Println("Pushing a notification to Alexa")
 
-	tokenStruct := refresh_token()
+	tokenStruct := refresh_token(force_refresh)
 	token := AuthResponse{}
 	json.Unmarshal([]byte(tokenStruct), &token)
 
@@ -232,7 +232,16 @@ func push_update(id, state int) string {
 		defer resp.Body.Close()
 		body, _ := ioutil.ReadAll(resp.Body)
 
+		log.Println("Status response: " + resp.Status)
 		log.Println("Body response: " + string(body))
+		if resp.StatusCode == 401 {
+			if !force_refresh {
+				log.Println("Retrying with new token")
+				push_update(id,state,true)
+			} else  {
+				log.Println("Failed after a refresh.  Giving up")
+			}
+		}
 	}
 	return "Completed"
 }

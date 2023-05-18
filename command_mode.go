@@ -60,7 +60,7 @@ func command_mode(cmd string, args []string) string {
 		return get_button_name(i)
 	case "pushcontact":
 		i, _ := strconv.Atoi(args[0])
-		push_update(i, 1)
+		push_update(i, 1, false)
 		return set_button_state(i, 0)
 	case "pushcontactbyname":
 		// This will push an update to the API to make Alexa
@@ -69,7 +69,7 @@ func command_mode(cmd string, args []string) string {
 		// This can be used to trigger a routine on "open".
 		button := get_button_by_name(args[0])
 		i := button.ButtonID
-		push_update(i, 1)
+		push_update(i, 1, false)
 		return set_button_state(i, 0)
 	case "deletebutton":
 		i, _ := strconv.Atoi(args[0])
@@ -106,7 +106,9 @@ func command_mode(cmd string, args []string) string {
 		set_button_name(DB_TOKEN_AUTH, args[0])
 		return get_button_name(DB_TOKEN_AUTH)
 	case "refreshtoken":
-		return refresh_token()
+		return refresh_token(false)
+	case "forcerefreshtoken":
+		return refresh_token(true)
 	case "discovery":
 		return discovery_response()
 	case "statereport":
@@ -114,7 +116,7 @@ func command_mode(cmd string, args []string) string {
 	case "pushupdate":
 		i, _ := strconv.Atoi(args[0])
 		j, _ := strconv.Atoi(args[1])
-		return push_update(i, j)
+		return push_update(i, j, false)
 	case "lambda":
 		data := os.Getenv("TEST")
 		if data == "" {

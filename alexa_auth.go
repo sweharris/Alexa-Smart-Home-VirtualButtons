@@ -44,7 +44,7 @@ func start_user_auth(data []byte) string {
 
 // Call this before any use of the user's authn token; we'll refresh
 // if needed
-func refresh_token() string {
+func refresh_token(force bool) string {
 	data := get_button_by_id(DB_TOKEN_AUTH)
 	if data.Name == "" {
 		return ""
@@ -55,7 +55,7 @@ func refresh_token() string {
 
 	// If we're within the life then we don't need to refresh
 	// (300 seconds leeway)
-	if token.TimeSet+token.ExpiresIn > time.Now().Unix()-300 {
+	if !force && token.TimeSet+token.ExpiresIn > time.Now().Unix()-300 {
 		log.Println("No refresh needed")
 		return data.Name
 	}
