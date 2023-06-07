@@ -30,3 +30,6 @@ getbuttons: main
 
 badpswd: main
 	curl $(GATEWAY) -H "Authorization: A bad password" -d '{"command": "pushcontactbyname", "param1": "Test Button 1"}'
+
+insecure: main
+	curl "$(GATEWAY)?cmd=$(PASS)/pushcontact/1"

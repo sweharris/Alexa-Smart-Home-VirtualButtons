@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
 	"log"
+	"strings"
 )
 
 type MyRequest struct {
@@ -28,6 +29,8 @@ func api_wrapper(data []byte) string {
 }
 
 func handle_api(data []byte) string {
+	var auth, cmd, param1, param2 string
+
 	// Parse the incoming message
 	message := events.APIGatewayProxyRequest{}
 	err := json.Unmarshal(data, &message)
@@ -36,41 +39,62 @@ func handle_api(data []byte) string {
 		return err.Error()
 	}
 
-	// We must have an authorizations header and it must match the
-	// password
-	our_pswd := get_button_name(DB_TOKEN_PSWD)
-	this_pswd := message.Headers["authorization"]
+	// Now the "correct" way of calling this API is via a POST
+	// with an Authorization header and with a JSON body.
+	//
+	// However it _could_ also be called with a GET and with
+	// a cmd=auth/command/parm1/parm2 string
+	// We'll only allow GET if insecure mode is set
+	insecure := get_button_name(DB_TOKEN_INSECURE)
 
-	if this_pswd != our_pswd {
+	query := message.QueryStringParameters["cmd"]
+	if query != "" && insecure == "insecure" {
+		// Let's use the query string
+		// This append() will ensure we have 4 parts
+		cmdstr := append(strings.Split(query, "/"), "", "", "", "")
+		auth = cmdstr[0]
+		cmd = cmdstr[1]
+		param1 = cmdstr[2]
+		param2 = cmdstr[3]
+		log.Println("Command=" + cmd + ", param1=" + param1 + ", param2=" + param2)
+	} else {
+		// POST request (we hope).  Use the header and body
+		auth = message.Headers["authorization"]
+
+		query = message.Body
+		log.Println("Body is: " + query)
+
+		if query == "" {
+			return "Error: Must be a POST request with JSON body"
+		}
+
+		// This is probably always true but we'll do it properly.
+		if message.IsBase64Encoded {
+			query2, err := base64.StdEncoding.DecodeString(query)
+			if err != nil {
+				return "Bad base64 encoded body: " + err.Error()
+			}
+			query = string(query2)
+			log.Println("Decoded body: " + query)
+		}
+
+		req := MyRequest{}
+		err = json.Unmarshal([]byte(query), &req)
+		if err != nil {
+			return "Bad JSON passed: " + err.Error()
+		}
+
+		cmd = req.Command
+		param1 = req.Param1
+		param2 = req.Param2
+	}
+
+	// Ensure the password is correct
+	our_pswd := get_button_name(DB_TOKEN_PSWD)
+
+	if auth != our_pswd {
 		return "Bad Authorization password"
 	}
 
-	// This needs to be a POST request.  But I'm not sure the data
-	// structure from the lambda-go/event is parsed properly, so we'll
-	// just test for an empty message body
-
-	query := message.Body
-	log.Println("Body is: " + query)
-
-	if query == "" {
-		return "Error: Must be a POST request with JSON body"
-	}
-
-	// This is probably always true but we'll do it properly.
-	if message.IsBase64Encoded {
-		query2, err := base64.StdEncoding.DecodeString(query)
-		if err != nil {
-			return "Bad base64 encoded body: " + err.Error()
-		}
-		query = string(query2)
-		log.Println("Decoded body: " + query)
-	}
-
-	req := MyRequest{}
-	err = json.Unmarshal([]byte(query), &req)
-	if err != nil {
-		return "Bad JSON passed: " + err.Error()
-	}
-
-	return command_mode(req.Command, []string{req.Param1, req.Param2})
+	return command_mode(cmd, []string{param1, param2})
 }

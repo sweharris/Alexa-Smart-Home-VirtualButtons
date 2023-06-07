@@ -26,6 +26,30 @@ So, for example, to list the buttons defined we could simply do:
 
 The Makefile has some examples.
 
+Alternatively there is an _insecure_ mode using GET requests.  Normally
+a GET is a bad idea because it may be logged (e.g. at proxies) and
+so this might expose the password.  To enable insecure mode you need
+to set button 100004 to hold the word `insecure` (see the installation
+guide on how to set buttons).
+
+In insecure mode you can make a GET request of the form
+
+    $URL?cmd=$PASS/command/param1/param2
+
+So you might do
+
+    curl $URL?cmd=$PASS/pushcontact/12
+
+Beware if using names with spaces in; spaces would need to be changed to
+`%20`; e.g. "Front Door" would become
+
+    $URL?cmd=$PASS/pushcontactbyname/Front%20Door
+
+Because this mode isn't recommended the rest of the documentation will
+use the POST/JSON mode.
+
+### Buttons
+
 Buttons have a number, a name and a state.  The state may be 0 == CLOSED == OFF, or 1 == OPEN == ON.
 
 Alexa Smart Home routines can handle 100 devices.  Button numbers don't

@@ -25,6 +25,7 @@ const (
 	DB_TOKEN_AUTH         = 100001
 	DB_TOKEN_ALEXA_ID     = 100002
 	DB_TOKEN_ALEXA_SECRET = 100003
+	DB_TOKEN_INSECURE     = 100004
 
 	TABLE_NAME = "Smart_Home_Virtual_Buttons"
 )
