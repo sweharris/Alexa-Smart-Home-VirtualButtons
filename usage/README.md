@@ -240,14 +240,14 @@ one for each, so now I get alerted if the garage door is opened.
 ## Advanced Usage (for experienced AWS users)
 
 If you are experienced with AWS and know how to use the CLI then you will
-likely have created API keys for use.  The `main` program that is used
+likely have created API keys for use.  The `bootstrap` program that is used
 for the Lamba can _also_ use these keys, so you have an alternate way
 of running commands.  This is done with the `-command` option
 
 e.g.
 
 ```
-% ./main -command getbuttons
+% ./bootstrap -command getbuttons
     10 OFF Garage Button
     11 OFF Washer Button
     12 OFF Drier Button
@@ -261,10 +261,10 @@ Unsurprisingly the command names are the same as those used by the API
 so you can do
 
 ```
-% ./main -command setname 1 "Test Button 1"
+% ./bootstrap -command setname 1 "Test Button 1"
 Test Button 1
 
-% ./main -command getbuttons
+% ./bootstrap -command getbuttons
      1 OFF Test Button 1
     10 OFF Garage Button
     11 OFF Washer Button
@@ -276,7 +276,7 @@ be sent to CloudWatch logs.  Be careful, this may contain some sensitive
 data
 
 ```
-% ./main -command setstatebyname "Test Button 1" 1
+% ./bootstrap -command setstatebyname "Test Button 1" 1
 2021/04/21 17:35:49 Pushing a notification to Alexa
 2021/04/21 17:35:49 No refresh needed
 2021/04/21 17:35:49 {"event":{"header":{"namespace":"Alexa",...}}}
@@ -303,7 +303,7 @@ e.g. instead of having to run
 You could instead just run
 
 ```
-% ./main -command setpasswd "foobar"
+% ./bootstrap -command setpasswd "foobar"
 ```
 
 Which is clearly a lot simpler!

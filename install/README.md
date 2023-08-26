@@ -180,14 +180,17 @@ Finally!
 * Create function.
 * Author from Scratch
   * For the function name I, again picked "Smart_Home_Virtual_Buttons"
-  * For the runtime select "go 1.x"
+  * For the runtime select "Provide your own bootstrap on Amazon Linux 2"
+  * Architecture should be "x86_64"
   * For the default execution role select the one we created earlier (which
 I called "Smart_Home_Virtual_Buttons"; consistency is nice!)
   * Click on Create Function
 
 * Now take note the ARN.  This is what we need to plug into the Alexa Skill
 * Click on the "Upload from" and upload the `lambda.zip` file.
-  * In the "Runtime settings" click on "edit" and then change the "Handle" value to "main".<br>This is the name of the program inside the zip file we just uploaded.
+* In the "Runtime settings" click on "edit" 
+  * ensure the Runtime is set to "Custom runtime for Amazon Linux 2"
+  * ensure the "Handle" value to "bootstrap" (this may not be necessary, but better safe...).<br>This is the name of the program inside the zip file we just uploaded.
   * Save that
 
 * Click on the "Configuration" tab
