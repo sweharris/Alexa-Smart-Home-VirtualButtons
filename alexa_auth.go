@@ -96,11 +96,11 @@ func do_user_auth(grant_type, typestr, value string) (string, bool) {
 		return "", false
 	}
 
+	log.Println(resp.StatusCode)
+
 	if resp.StatusCode != http.StatusOK {
 		return "", false
 	}
-
-	log.Println(resp.StatusCode)
 
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
