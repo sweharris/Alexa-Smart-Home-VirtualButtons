@@ -91,6 +91,11 @@ func command_mode(cmd string, args []string) string {
 		set_button_name(DB_TOKEN_ALEXA_SECRET, args[0])
 		return get_button_name(DB_TOKEN_ALEXA_SECRET)
 
+	// Allow an alternate endpoint to be defined
+	case "setendpoint":
+		set_button_name(DB_API_ENDPOINT, args[0])
+		return get_button_name(DB_API_ENDPOINT)
+
 	// Verify they're set correctly
 	case "getclientid":
 		return get_button_name(DB_TOKEN_ALEXA_ID)

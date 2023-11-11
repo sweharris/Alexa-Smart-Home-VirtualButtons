@@ -14,6 +14,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -224,7 +225,31 @@ func push_update(id, state int, force_refresh bool) string {
 	json, _ := json.Marshal(response)
 	log.Println(string(json))
 
-	resp, err := http.Post("https://api.amazonalexa.com/v3/events", "application/json", bytes.NewBuffer(json))
+	region := os.Getenv("AWS_REGION")
+	if region == "" {
+		region = os.Getenv("AWS_DEFAULT_REGION")
+	}
+	if region == "" {
+		region = "<Unknown>"
+	}
+	log.Println("Running in region: " + region)
+
+	// Has the user defined a specific endpoint to use?
+	api := get_button_name(DB_API_ENDPOINT)
+	
+	// If not, pick a regional one
+	if api == "" {
+		if region == "eu-west-1" {
+			api = "https://api.eu.amazonalexa.com/v3/events"
+		} else if region == "us-west-2" {
+			api = "https://api.fe.amazonalexa.com/v3/events"
+		} else {
+			api = "https://api.amazonalexa.com/v3/events"
+		}
+	}
+	log.Println("Using API endpoint: " + api)
+
+	resp, err := http.Post(api, "application/json", bytes.NewBuffer(json))
 
 	if err != nil {
 		log.Println("Error sending update: " + err.Error())

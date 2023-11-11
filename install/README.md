@@ -21,10 +21,18 @@ user and use that to login) but this isn't an Amazon tutorial.
 a lot of these instructions on.
 
 Now there some question in my mind as to what _region_ a skill should be
-deployed in.  The [Amazon documentation](https://developer.amazon.com/en-US/docs/alexa/smarthome/develop-smart-home-skills-in-multiple-languages.html#deploy)
-says that it depends on the language you support.  However this skill
-doesn't do voice interaction so I'm not sure it matters.  I deployed
-to us-east-1 (North Virginia). 
+deployed in.  The [Amazon documentation](https://developer.amazon.com/en-GB/docs/alexa/custom-skills/host-a-custom-skill-as-an-aws-lambda-function.html#select-the-optimal-region-for-your-aws-lambda-function) says
+
+| Location | Deploy Region | Region Name |
+| -------- | ------------- | ----------- |
+| NA | us-east-1 | US East (N. Virginia) |
+| EU or IN | eu-west-1 | EU (Ireland) |
+| Far East | us-west-2 | US West (Oregon) |
+
+If you deploy to these regions things should "just work".  If you deploy
+to another region then see later around API regional endpoints.
+
+I deployed to us-east-1 (North Virginia). 
 
 This will impact the deployment of DynamoDB and the Lamba skill, and
 maybe also the API Gateway.  When you get to the "AWS Console" part of
@@ -39,6 +47,8 @@ both the Alexa Developer portal and the AWS service console.
 There is a blank [Numbers.txt](Numbers.txt) file which will help you
 record all the "magic numbers" that will be needed as we go through
 this process.
+
+*Be very careful with cut'n'pasting; additional whitespace may cause things not to work, especially in IDs and secrets.*
 
 ### Set up a "Login with Amazon" security profile
 
@@ -273,6 +283,28 @@ Now do the same for buttonid 100002 and enter the previously saved "Alexa Client
 The resulting table should look like something like:
 
 ![buttonmame](buttonname.png)
+
+### API regional endpoints.
+
+Depending on the region you deploy to, the API endpoint the skill needs
+to send data to to alert on button changes is different.  If you pick
+one of the three standard regions then the code should automatically
+pick the right endpoint
+
+| region | endpoint |
+| ------ | -------- |
+| us-east-1 | North America: https://api.amazonalexa.com/v3/events |
+| eu-west-1 | Europe: https://api.eu.amazonalexa.com/v3/events |
+| us-west-2 | Far East: https://api.fe.amazonalexa.com/v3/events |
+
+If you deploy to a different region then you can define button 100005
+to contain the API endpoint to talk to.  This can be done with the
+`setendpoint` command, or via the GUI
+
+```
+% curl -H "Authorization: foobar" https://abcdefghij.execute-api.us-east-1.amazonaws.com/default/Smart_Home_Virtual_Buttons -d '{"command":"setendpoint", "param1":"https://api.amazonalexa.com/v3/events"}'
+{"Answer:":"https://api.amazonalexa.com/v3/events"}'
+```
 
 ### Create the Alexa Trigger
 
