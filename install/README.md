@@ -228,6 +228,18 @@ we will password protect the site, but they will be able to cause API
 requests to occur and that will be counted as part of the $1/million
 calls.  So keep this secret!
 
+Now for a sanity check, we need to ensure the API version is set to
+version 2.0.  In my deployments it was that, but others
+have reported it defaults to 1.0.  Maybe something changed in the
+trigger setup...
+
+So from the lambda overview, click on the API Gateway and select the API
+trigger.  This will take you to the "API Gateway" configuration page.  On
+the left menu select "Integrations", and then select the "ANY" route.
+You will now see a "Payload format version" definition.  If it says
+1.0 then edit the setting ("manage"/"edit"/"advanced") and change it
+to 2.0.
+
 ### Set security on the API
 
 To prevent abuse (making Alexa talk all the time) we should set a password.
