@@ -236,7 +236,7 @@ func push_update(id, state int, force_refresh bool) string {
 
 	// Has the user defined a specific endpoint to use?
 	api := get_button_name(DB_API_ENDPOINT)
-	
+
 	// If not, pick a regional one
 	if api == "" {
 		if region == "eu-west-1" {
@@ -262,8 +262,8 @@ func push_update(id, state int, force_refresh bool) string {
 		if resp.StatusCode == 401 {
 			if !force_refresh {
 				log.Println("Retrying with new token")
-				push_update(id,state,true)
-			} else  {
+				push_update(id, state, true)
+			} else {
 				log.Println("Failed after a refresh.  Giving up")
 			}
 		}

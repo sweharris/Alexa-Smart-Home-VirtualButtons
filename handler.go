@@ -21,7 +21,7 @@ func process_lambda(data []byte) []byte {
 	// let us easily look at the fields at the top of the JSON structure
 	// and make a guestimate as to the type of call.
 
-	log.Println("Incoming data: ",string(data))
+	log.Println("Incoming data: ", string(data))
 
 	result := "No results"
 

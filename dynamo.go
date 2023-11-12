@@ -63,8 +63,8 @@ func get_buttons(all bool) []Button {
 		b := Button{}
 		dynamodbattribute.UnmarshalMap(result.Items[c], &b)
 		// If the button has no name then set a default one
-		if b.Name == "" {
-			b.Name=fmt.Sprintf("switch-%06d", b.ButtonID)
+		if b.Name == "" && b.ButtonID <= DB_MAX_VAL {
+			b.Name = fmt.Sprintf("switch-%06d", b.ButtonID)
 		}
 		if all || b.ButtonID <= DB_MAX_VAL {
 			buttons = append(buttons, b)
