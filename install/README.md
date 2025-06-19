@@ -138,7 +138,7 @@ services on the left, which can help you move between the pages.
     ]
 }
 ```
-This will allow writing of log messages to CloudTrail and to read/write
+This will allow writing of log messages to CloudWatch and to read/write
 from DynamoDB.  It's probably a little excessive for DynamoDB, but it
 should work.
 
@@ -170,7 +170,7 @@ then you'll need to modify the code (`dynamo.go`) definition.
 * Ensure the "Encryption at rest" is set to "DEFAULT"
 * "Create" the table!
 
-### Clean up some CloudTrail/SNS stuff (optional)
+### Clean up some CloudWatch/SNS stuff (optional)
 
 Creating that table will have set up some default alerting rules.  We
 don't need these.  If you keep them you won't be charged, but we might
@@ -352,8 +352,8 @@ Alexa (Amazon.com) username and password.
 
 ### What if it fails
 
-The lambda function writes out various messages to CloudTrail while it is
-working, so you can select the "Cloud Trail" service, select the Log Groups
+The lambda function writes out various messages to CloudWatch while it is
+working, so you can select the "CloudWatch" service, select the Log Groups
 option and then select our skill.
 
 You might see multiple streams because AWS frequently rotates them.
