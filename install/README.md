@@ -163,11 +163,10 @@ should work.
 * Click on "Create Table"
 * The name to use is "Smart_Home_Virtual_Buttons".  If you change this
 then you'll need to modify the code (`dynamo.go`) definition.
-* The Primary Key is "buttonid" and it must be type "Number".
-* Unclick "use default settings".
-* Ensure the capacity is set to "Provisioned (free tier)"
-* Turn _off_ autoscaling
-* Ensure the "Encryption at rest" is set to "DEFAULT"
+* The Partition Key is "buttonid" and it must be type "Number".
+* Click "Customize settings" under "Table Settings".
+* Click "Provisioned" under "Read/write capacity settings", and _set auto-scaling off_ (Capacity units for both read and write should be set to 5)
+* Ensure the "Encryption at rest" is set to "Owned by Amazon DynamoDB"
 * "Create" the table!
 
 ### Clean up some CloudWatch/SNS stuff (optional)
@@ -200,7 +199,7 @@ I called "Smart_Home_Virtual_Buttons"; consistency is nice!)
 * Click on the "Upload from" and upload the `lambda.zip` file.
 * In the "Runtime settings" click on "edit" 
   * ensure the Runtime is set to "Custom runtime for Amazon Linux 2"
-  * ensure the "Handle" value to "bootstrap" (this may not be necessary, but better safe...).<br>This is the name of the program inside the zip file we just uploaded.
+  * ensure the "Handler" value to "bootstrap" (this may not be necessary, but better safe...).<br>This is the name of the program inside the zip file we just uploaded.
   * Save that
 
 * Click on the "Configuration" tab
@@ -212,6 +211,7 @@ I called "Smart_Home_Virtual_Buttons"; consistency is nice!)
 ### Add a API Gateway trigger
 
 * Click on Add trigger, and select "API Gateway"
+* Select "Create a new API"
 * API type is "HTTP API"
 * Security is "Open"
 * Click Add
@@ -254,6 +254,11 @@ We can do this via the API itself or we can do it via the DynamoDB console
 curl https://abcdefghij.execute-api.us-east-1.amazonaws.com/default/Smart_Home_Virtual_Buttons -d '{"command":"setpasswd", "param1":"foobar"}'
 ```
 
+If using the Windows Command line, copy this instead (Be sure to use your API endpoint from before)
+```
+curl -X POST https://abcdefghij.execute-api.us-east-1.amazonaws.com/default/Smart_Home_Virtual_Buttons -H "Content-Type: application/json" -d "{\"command\":\"setpasswd\", \"param1\":\"foobar\"}"
+```
+
 This should respond `{"Answer:":"foobar"}`.  If it does then we've set the
 password to "foobar".  Obviously pick a password you want!
 
@@ -269,10 +274,20 @@ We need to run the "setclientid" command with the "Alexa Client ID" and the
 "setclientsecret" with the "Alexa Client Secret" values.
 
 ```
-% curl -H "Authorization: foobar" https://abcdefghij.execute-api.us-east-1.amazonaws.com/default/Smart_Home_Virtual_Buttons -d '{"command":"setclientid", "param1":"amzn1.application-oa2-client.################################"}'
-{"Answer:":"amzn1.application-oa2-client.################################"}
+curl -H "Authorization: foobar" https://abcdefghij.execute-api.us-east-1.amazonaws.com/default/Smart_Home_Virtual_Buttons -d '{"command":"setclientid", "param1":"amzn1.application-oa2-client.################################"}'
+```
+Responds: `{"Answer:":"amzn1.application-oa2-client.################################"}`
+```
 curl -H "Authorization: foobar" https://abcdefghij.execute-api.us-east-1.amazonaws.com/default/Smart_Home_Virtual_Buttons -d '{"command":"setclientsecret", "param1":"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"}'
-{"Answer:":"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"}
+```
+Responds `{"Answer:":"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"}`
+
+Using Windows Command Line? Use these instead:
+```
+curl -X POST https://abcdefghij.execute-api.us-east-2.amazonaws.com/default/Smart_Home_Virtual_Buttons -H "Authorization: foobar" -H "Content-Type: application/json" -d "{\"command\":\"setclientid\", \"param1\":\"amzn1.application-oa2-client.################################\"}"
+```
+```
+curl https://abcdefghij.execute-api.us-east-2.amazonaws.com/default/Smart_Home_Virtual_Buttons -H "Authorization: foobar" -H "Content-Type: application/json" -d "{\"command\":\"setclientsecret\", \"param1\":\"################################\"}"
 ```
 
 This will create buttonids 100001 and 100002 in DynamoDB
@@ -324,6 +339,7 @@ From the services menu go back to Lambda and select the function we just
 defined.
 
 * Click on Add Trigger
+* Select "Alexa"
 * Select "Alexa Smart Home"
 * Enter the Alexa Skill ID we previously saved
 * Click create.
