@@ -189,7 +189,7 @@ Finally!
 * Create function.
 * Author from Scratch
   * For the function name I, again picked "Smart_Home_Virtual_Buttons"
-  * For the runtime select "Provide your own bootstrap on Amazon Linux 2"
+  * For the runtime select "Provide your own bootstrap on Amazon Linux 2023"
   * Architecture should be "x86_64"
   * For the default execution role select the one we created earlier (which
 I called "Smart_Home_Virtual_Buttons"; consistency is nice!)
